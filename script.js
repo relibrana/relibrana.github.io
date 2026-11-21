@@ -72,7 +72,7 @@
     for (let i = 0; i < 3; i++) {
       const heart = document.createElement('span');
       heart.className = 'heart-pop';
-      heart.textContent = i === 1 ? '♥' : '♡';
+      heart.textContent = i === 1 ? '♥︎' : '♡︎';
       heart.style.left = (38 + i * 12) + '%';
       heart.style.setProperty('--drift', ((i - 1) * 45) + 'px');
       heart.style.animationDelay = (i * 95) + 'ms';
