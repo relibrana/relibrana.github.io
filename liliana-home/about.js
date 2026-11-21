@@ -4,7 +4,7 @@
     document.documentElement.lang = lang;
     document.querySelectorAll('[data-en][data-es]').forEach(el => {
       const value = el.getAttribute('data-' + lang);
-      if (['H1', 'H2', 'H3'].includes(el.tagName)) el.innerHTML = value;
+      if (/<[a-z][\s\S]*>/i.test(value)) el.innerHTML = value;
       else el.textContent = value;
     });
     document.querySelectorAll('[data-lang]').forEach(button => {
