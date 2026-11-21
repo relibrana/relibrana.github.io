@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script defer src="about.js"></script>
-<script defer src="sparkles.js"></script><script defer src="clean-urls.js"></script></head>
+<script defer src="sparkles.js"></script><script>(() => { const { pathname, search, hash } = window.location; if (!/\.html$/i.test(pathname)) return; const cleanPath = pathname.replace(/(?:^|\/)index\.html$/i, '/').replace(/\.html$/i, '/'); window.history.replaceState(null, '', cleanPath + search + hash); })();</script></head>
 <body class="about-page">
   <a class="skip-link" href="#main" data-en="Skip to content" data-es="Ir al contenido">Skip to content</a>
   <div class="site-shell">
