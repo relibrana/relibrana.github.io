@@ -67,4 +67,55 @@
       sparkle.addEventListener('animationend', () => sparkle.remove(), { once: true });
     }
   }, { passive: true });
+  // A small, page-wide flower wipe makes internal navigation feel intentional.
+  // It is built from CSS shapes rather than emoji so it stays consistent on iOS.
+  const transitionKey = 'relibrana-flower-transition';
+  const flowerColors = ['#df477d', '#d5ef39', '#d7c5ff', '#ffc9dc', '#8fdaef'];
+  const makeFlowerWipe = mode => {
+    const layer = document.createElement('div');
+    layer.className = `flower-wipe flower-wipe--${mode}`;
+    layer.setAttribute('aria-hidden', 'true');
+    for (let index = 0; index < 26; index += 1) {
+      const flower = document.createElement('i');
+      flower.className = 'flower-wipe__flower';
+      flower.style.setProperty('--flower-x', `${4 + Math.random() * 92}%`);
+      flower.style.setProperty('--flower-y', `${3 + Math.random() * 94}%`);
+      flower.style.setProperty('--flower-size', `${26 + Math.random() * 62}px`);
+      flower.style.setProperty('--flower-delay', `${Math.random() * 220}ms`);
+      flower.style.setProperty('--flower-turn', `${-35 + Math.random() * 70}deg`);
+      flower.style.setProperty('--flower-color', flowerColors[index % flowerColors.length]);
+      layer.append(flower);
+    }
+    document.body.append(layer);
+    return layer;
+  };
+  const leaveWithFlowers = destination => {
+    const wipe = makeFlowerWipe('enter');
+    sessionStorage.setItem(transitionKey, 'true');
+    window.setTimeout(() => { window.location.assign(destination); }, 540);
+    return wipe;
+  };
+  if (sessionStorage.getItem(transitionKey)) {
+    sessionStorage.removeItem(transitionKey);
+    const wipe = makeFlowerWipe('leave');
+    wipe.addEventListener('animationend', () => wipe.remove(), { once: true });
+  }
+  document.addEventListener('click', event => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const link = event.target.closest('a[href]');
+    if (!link || link.target || link.hasAttribute('download')) return;
+    if (link.closest('[data-open-case]')) return;
+    const destination = new URL(link.href, window.location.href);
+    if (destination.origin !== window.location.origin || !/^https?:$/.test(destination.protocol)) return;
+    const current = new URL(window.location.href);
+    if (destination.pathname === current.pathname && destination.search === current.search) return;
+    event.preventDefault();
+    leaveWithFlowers(destination.href);
+  }, true);
+  window.addEventListener('pageshow', event => {
+    if (event.persisted) {
+      const wipe = makeFlowerWipe('leave');
+      wipe.addEventListener('animationend', () => wipe.remove(), { once: true });
+    }
+  });
 })();
